@@ -1,0 +1,108 @@
+﻿@model List<ShoppingPlate.Models.CartItem>
+@{
+    ViewData["Title"] = "結帳";
+    var total = Model.Sum(i => i.Product.Price * i.Quantity);
+    var role = (UserRole?)Context.Session.GetInt32("LoginRole");
+    
+}
+
+<h2>結帳資訊</h2>
+
+<form method="post">
+  <div class="mb-3">
+    <label>姓名</label>
+    <input name="name" class="form-control" required value="@ViewData["Name"]" />
+</div>
+<div class="mb-3">
+    <label>電話</label>
+    <input name="phone" class="form-control" required value="@ViewData["Phone"]" />
+</div>
+<div class="mb-3">
+    <label>Email</label>
+    <input name="email" type="email" class="form-control" required value="@ViewData["Email"]" />
+</div>
+<div class="mb-3">
+    <label>送貨地址</label>
+    <input name="address" class="form-control" required value="@ViewData["Address"]" />
+</div>
+
+    <!-- 帶入會員資料按鈕（僅顯示已登入會員） -->
+    @if (User.Identity.IsAuthenticated)
+    {
+        <div class="mb-3">
+            <a class="btn btn-outline-primary" asp-controller="Account" asp-action="Edit">
+                📝 完善會員資料
+            </a>
+        </div>
+    }
+
+
+<!-- 結帳方式 -->
+<div class="mb-3">
+    <label for="paymentMethod">選擇付款方式</label>
+    <select name="paymentMethod" id="paymentMethod" class="form-control" required>
+        <option value="">-- 請選擇 --</option>
+        <option value="COD">貨到付款</option>
+        <option value="CreditCard">信用卡</option>
+        <option value="LinePay">LINE Pay</option>
+    </select>
+</div>
+    @if (role == null)
+    {
+        <!-- 是否註冊為會員 -->
+        <div class="form-check mb-3">
+            <input class="form-check-input" type="checkbox" id="registerCheckbox" name="registerAsMember" onchange="togglePassword()">
+            <label class="form-check-label" for="registerCheckbox">
+                還不是會員？立即註冊並儲存資料
+            </label>
+        </div>
+
+    }
+
+    <!-- 密碼（預設隱藏） -->
+    <div class="mb-3" id="passwordField" style="display:none;">
+        <label>設定密碼</label>
+        <input name="password" type="password" class="form-control" />
+    </div>
+    <div id="googleSignIn" style="display:none";>
+        <a class="btn btn-outline-danger" href="/Account/GoogleLogin?returnUrl=@Context.Request.Path">使用 Google 登入結帳更方便 </a>
+    </div>
+
+    <h4>商品明細：</h4>
+    <ul>
+        @foreach (var item in Model)
+        {
+                <li>@item.Product.Name x @item.Quantity（單價 $@item.Product.Price）</li>
+        }
+    </ul>
+
+    <h5>總金額：$@total</h5>
+
+    <button type="submit" class="btn btn-primary">送出訂單</button>
+</form>
+
+<!-- 密碼欄位顯示控制-->
+@section scripts{
+        <script>
+        function togglePassword() {
+            var checkbox = document.getElementById('registerCheckbox');
+            var passwordField = document.getElementById('passwordField');
+<<<<<<< HEAD
+            var googleSignIn = document.getElementById('googleSignIn');
+            passwordField.style.display = checkbox.checked ? 'block' : 'none';
+            googleSignIn.style.display = checkbox.checked ? 'block' : 'none';
+=======
+            passwordField.style.display = checkbox.checked ? 'block' : 'none';
+>>>>>>> 971538b (加入下架功能)
+        }
+        // 已登入會員資訊直接帶入
+        function fillUserInfo() {
+            document.querySelector('[name="name"]').value = "@ViewData["Name"]";
+            document.querySelector('[name="phone"]').value = "@ViewData["Phone"]";
+            document.querySelector('[name="email"]').value = "@ViewData["Email"]";
+            document.querySelector('[name="address"]').value = "@ViewData["Address"]";
+        }
+
+    </script>
+}
+

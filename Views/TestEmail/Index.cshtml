@@ -1,0 +1,30 @@
+﻿@{
+    ViewData["Title"] = "測試寄信";
+}
+
+<h2>📬 測試寄信</h2>
+
+<form method="post">
+    <div>
+        <label>收件者 Email：</label>
+        <input type="email" name="toEmail" required />
+    </div>
+    <div>
+        <label>主旨：</label>
+        <input type="text" name="subject" required value="這是測試信件" />
+    </div>
+    <div>
+        <label>內容：</label>
+        <textarea name="message" rows="5">這是 ShoppingPlate 測試寄出的內容</textarea>
+    </div>
+    <br />
+    <button type="submit">📨 寄出測試信</button>
+</form>
+
+@if (ViewBag.Result != null)
+{
+        <p style="margin-top:20px; color:darkgreen;">@ViewBag.Result</p>
+}
+
+<br />
+<a href="/TestEmail/TestSmtpDirect">➡️ 直接測試 SMTP</a>

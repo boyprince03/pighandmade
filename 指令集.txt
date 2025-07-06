@@ -1,0 +1,79 @@
+安裝 EF Core CLI 工具
+dotnet tool install --global dotnet-ef
+
+//新增 Migration（建立資料表結構快照）
+dotnet ef migrations add InitialCreate -->add 自訂名稱
+//更新資料庫（執行 Migration）
+dotnet ef database update
+dotnet ef database update --project ShoppingPlate --startup-project ShoppingPlate
+dotnet ef database update --project ./ShoppingPlate/ShoppingPlate.csproj --startup-project ./ShoppingPlate/ShoppingPlate.csproj
+//列出目前的資料庫 vs 模型差異
+dotnet ef migrations script
+//list
+dotnet ef migrations list
+//刪除 Migration（刪除資料表結構快照）
+dotnet ef migrations remove
+//檢查 DB 連線與遷移狀態
+dotnet ef database update --verbose
+//刪除資料庫
+dotnet ef database drop
+dotnet ef database drop --force
+dotnet ef database update
+
+git 指令集
+git add.
+git commit -m "your message"
+git push origin main
+git pull origin main
+git checkout -b feature/your-feature-name
+git checkout main
+git merge feature/your-feature-name
+git branch -d feature/your-feature-name
+//建立 .gitignore 檔案
+git ignore 
+//查看目前的 git 狀態
+git status
+//查看目前的 git 配置
+git config --list
+
+//設定使用者名稱
+git config --global user.name "Your Name"
+//設定使用者電子郵件
+git config --global user.email "your email"
+//查看目前分支
+git branch
+//查看所有分支
+git branch -a
+//查看遠端分支
+git branch -r
+//切換分支
+git checkout branch-name
+//建立新分支
+git checkout -b new-branch-name
+//刪除本地分支
+git branch -d branch-name
+//強制刪除本地分支
+git branch -D branch-name
+//刪除遠端分支
+git push origin --delete branch-name
+//查看提交歷史
+git log
+//查看提交歷史（簡潔版）
+git log --oneline
+//查看提交歷史（圖形化）
+git log --graph --oneline --decorate
+//查看提交歷史（圖形化，包含分支）
+git log --graph --oneline --decorate --all
+//查看某個檔案的提交歷史
+git log --oneline -- path/to/file
+//查看某個分支的提交歷史
+git log branch-name --oneline
+//查看某個提交的詳細資訊
+git show commit-hash	
+//查看某個提交的差異
+git diff commit-hash
+//查看某個檔案在某個提交的內容
+git show commit-hash -- path/to/file
+//查看某個檔案在某個提交的差異
+git diff commit-hash -- path/to/file
+

@@ -1,0 +1,41 @@
+﻿<div id="chatbot-container">
+    <div id="chatbot-tooltip" class="hide">
+        Hi~ <span id="chat-role"></span>：<span id="chat-username"></span>！我是 Ez 小助手，有什麼問題都可以問我！
+    </div>
+
+    <div id="chatbot-icon" onclick="toggleChatbot()">🤖</div>
+
+    <div id="chatbot-window" class="hidden">
+        <div style="background:#4CAF50; color:white; padding:10px; border-radius:10px 10px 0 0; display:flex; justify-content:space-between;">
+            <span> Ez 小助手 🤖</span>
+            <button onclick="closeChatbot()" style="background:none; border:none; color:white; font-size:18px; cursor:pointer;">✖</button>
+        </div>
+        <div id="chatbot-body" style="flex:1; overflow-y:auto; padding:10px;">
+            <div><strong>常見問題：</strong></div>
+            <ul>
+                <li onclick="sendPredefined('如何查詢訂單？')">如何查詢訂單？</li>
+                <li onclick="sendPredefined('如何申請退貨？')">如何申請退貨？</li>
+                <li onclick="sendPredefined('我要修改密碼')">我要修改密碼</li>
+            </ul>
+        </div>
+        <div style="padding:10px;">
+            <button onclick="clearChatHistory()">🗑 清除對話</button>
+            <a class="return" href="/">🔙 回首頁</a>
+            <input type="text" id="chatbot-input" placeholder="輸入你的問題...(Gemini AI)" style="width:80%;" />
+
+            <button onclick="sendMessage()">送出</button>
+        </div>
+    </div>
+</div>
+
+
+<link rel="stylesheet" href="~/css/chatbot.css" />
+<script src="~/js/chatbot.js"></script>
+<script>
+function handleEnter(e) {
+    if (e.key === "Enter") {
+        e.preventDefault();
+        sendMessage();
+    }
+}
+</script>

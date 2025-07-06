@@ -1,0 +1,64 @@
+﻿@model IEnumerable<ShoppingPlate.Models.Product>
+@{
+    ViewData["Title"] = "商品管理（賣家專用）";
+}
+
+<h2>我的商品管理</h2>
+
+<p>
+    <a class="btn btn-success" asp-action="Create">➕ 上架新商品</a>
+</p>
+
+@if (!Model.Any())
+{
+        <div class="alert alert-warning">您尚未上架商品</div>
+}
+else
+{
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>圖片</th>
+                    <th>名稱</th>
+                    <th>價格</th>
+                    <th>庫存</th>
+                    <th>狀態</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+            @foreach (var product in Model)
+            {
+                    <tr>
+                        <td>
+                        @if (product.Images.Any())
+                        {
+                                    <img src="@product.Images.First().Url" width="80" />
+                        }
+                        else
+                        {
+                                    <span class="text-muted">無圖片</span>
+                        }
+                        </td>
+                        <td>@product.Name</td>
+                        <td>@product.Price</td>
+                        <td>@product.Stock</td>
+                        <td>
+                            <span class="badge @(product.IsPublished ? "bg-success" : "bg-secondary")">
+                            @(product.IsPublished ? "已上架" : "未上架")
+                            </span>
+                        </td>
+                        <td>
+                            <a asp-action="Edit" asp-route-id="@product.Id" class="btn btn-sm btn-warning">編輯</a>
+                            <form asp-action="TogglePublish" method="post" class="d-inline">
+                                <input type="hidden" name="id" value="@product.Id" />
+                                <button type="submit" class="btn btn-sm btn-outline-secondary">
+                                @(product.IsPublished ? "下架" : "上架")
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+            }
+            </tbody>
+        </table>
+}
