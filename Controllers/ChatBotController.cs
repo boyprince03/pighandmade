@@ -28,7 +28,7 @@ public class ChatBotController : Controller
         string role = HttpContext.Session.GetInt32("LoginRole")?.ToString() ?? "訪客";
         string userName = HttpContext.Session.GetString("UserName") ?? "未登入";
         string path = HttpContext.Request.Path;
-        string context = $"你是 Ez 購物平台的 AI 小助手。網站使用 ASP.NET Core MVC 架構，具有購物車、商品瀏覽、訂單管理、退貨、金流功能。目前使用者為：{role}（{userName}），正在瀏覽：{path} 頁面。請根據這些資訊回答問題。";
+        string context = $"你是 豬手遮天購物網站的 AI 小助手。 網站使用 ASP.NET Core MVC 架構，具有購物車、商品瀏覽、訂單管理、退貨、金流功能。目前使用者為：{role}（{userName}），正在瀏覽：{path} 頁面。請根據這些資訊以中文回答問題。";
 
         var geminiResponse = await _geminiService.AskGemini(message);
         return Json(new { reply = geminiResponse });
