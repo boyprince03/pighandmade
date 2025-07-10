@@ -1,0 +1,46 @@
+@{
+    ViewData["Title"] = "常見問題";
+}
+
+<div class="container my-5">
+    <h2 class="mb-4"><i class="bi bi-question-circle"></i> 常見問題 FAQ</h2>
+    <div class="accordion" id="faqAccordion">
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="faq1">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse1" aria-expanded="true" aria-controls="collapse1">
+                    如何註冊會員？
+                </button>
+            </h2>
+            <div id="collapse1" class="accordion-collapse collapse show" aria-labelledby="faq1" data-bs-parent="#faqAccordion">
+                <div class="accordion-body">
+                    點選右上角「註冊」，填寫基本資料後即可完成註冊。
+                </div>
+            </div>
+        </div>
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="faq2">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse2" aria-expanded="false" aria-controls="collapse2">
+                    購物流程是什麼？
+                </button>
+            </h2>
+            <div id="collapse2" class="accordion-collapse collapse" aria-labelledby="faq2" data-bs-parent="#faqAccordion">
+                <div class="accordion-body">
+                    選擇商品加入購物車 → 前往結帳 → 填寫資料並付款 → 等待出貨。
+                </div>
+            </div>
+        </div>
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="faq3">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse3" aria-expanded="false" aria-controls="collapse3">
+                    如何查詢訂單？
+                </button>
+            </h2>
+            <div id="collapse3" class="accordion-collapse collapse" aria-labelledby="faq3" data-bs-parent="#faqAccordion">
+                <div class="accordion-body">
+                    登入後，點選「會員中心」→「訂單查詢」即可查看所有訂單紀錄。
+                </div>
+            </div>
+        </div>
+        <!-- 依需求自行增加更多問題 -->
+    </div>
+</div>

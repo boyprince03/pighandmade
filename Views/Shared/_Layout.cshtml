@@ -110,6 +110,8 @@
 						<a class="text-dark text-decoration-none"> ｜ </a>
 						<a class="text-dark text-decoration-none" asp-controller="Account" asp-action="Register">註冊</a>
 					}
+					@* AI小助手 *@
+					@await Html.PartialAsync("ChatBot")
 				</div>
 			</div>
 		</nav>
@@ -119,8 +121,7 @@
 			@RenderBody()
 		</main>
 	</div>
-						@* AI小助手 *@
-					@await Html.PartialAsync("ChatBot")
+
 	
 	<div id="cart-alert" class="alert alert-success alert-dismissible fade show position-fixed top-0 end-0 m-4 shadow"
 		 role="alert" style="display: none; z-index: 1050;">
@@ -160,8 +161,8 @@
 					<div class="col-md-3 mb-3">
 						<h5>相關連結</h5>
 						<ul class="list-unstyled">
-							<li><a class="text-white text-decoration-underline" href="#">常見問題</a></li>
-							<li><a class="text-white text-decoration-underline" href="#">關於豬手遮天</a></li>
+							<li><a class="text-white text-decoration-underline" asp-controller="Home" asp-action="CommonProblem">常見問題</a></li>
+							<li><a class="text-white text-decoration-underline" asp-controller="Home" asp-action="AboutUs">關於豬手遮天</a></li>
 							<li><a class="text-white text-decoration-underline" asp-controller="Home" asp-action="Privacy">隱私條款</a></li>
 						</ul>
 					</div>
