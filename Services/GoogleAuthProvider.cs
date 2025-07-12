@@ -40,7 +40,10 @@ namespace ShoppingPlate.Services
                     Email = email,
                     Provider = "Google",
                     ProviderKey = googleId,
-                    LoginRole = UserRole.Customer
+                    LoginRole = UserRole.Customer,
+                    Phone = "0929511xxx",
+                    Address = "未填寫",
+                    Password = Guid.NewGuid().ToString("N"),
                 };
 
                 _context.Users.Add(user);

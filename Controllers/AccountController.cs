@@ -163,12 +163,22 @@ public class AccountController : Controller
         return View();
     }
 
+    bool IsGuidFormat(string password)
+    {
+        if (string.IsNullOrEmpty(password)) return false;
+        return Guid.TryParseExact(password, "N", out _);
+    }
+    
     [HttpPost]
     public async Task<IActionResult> Login(string users, string email, string password, string? returnUrl)
     {
         var user = _context.Users.FirstOrDefault(u =>
             u.Email == email && u.Username == users && u.Password == password);
-
+        if (user != null && user.Provider == "Google" && IsGuidFormat(user.Password))
+        {
+            ViewBag.Error = "此帳號尚未設定密碼，請用 Google 登入，或先設定密碼！";
+            return View();
+        }
         if (user == null)
         {
             ViewBag.Error = "帳號或密碼錯誤";
