@@ -46,40 +46,10 @@
 
             <dt class="col-sm-4">電話：</dt>
                 <dd class="col-sm-8">@Model.Phone</dd>
-
-            <dt class="col-sm-4">商店：</dt>
-                <dd class="col-sm-8">
-                @if (Model.SellerApplication != null && Model.SellerApplication.Status == ApplicationStatus.Approved)
-                {
-                    @Model.SellerApplication.StoreName
-                }
-                else
-                {
-            <span class="text-muted">尚未設置商店</span>
-                }
-                </dd>
         </dl>
 
         <div class="d-flex gap-2 mt-3">
             <a href="/Account/VerifyPassword?returnUrl=/Account/Edit" class="btn btn-outline-primary w-100">✏️ 編輯帳號</a>
-
-
-            @* @if (Model.LoginRole == UserRole.Customer)
-            {
-                if (hasPendingApplication)
-                {
-                <button class="btn btn-secondary w-50" disabled>⏳ 賣家申請審核中</button>
-                }
-                else
-                {
-                <a href="/Account/ApplySeller" class="btn btn-success w-50">⬆️ 申請成為賣家</a>
-                }
-            }
-            else if (Model.LoginRole == UserRole.Seller || Model.LoginRole == UserRole.Admin)
-            {
-                <button class="btn btn-secondary w-50" disabled>✅ 已是賣家</button>
-            } *@
-
         </div>
     </div>
 </div>

@@ -21,8 +21,35 @@ public class AccountController : Controller
         _context = context;
         _googleAuthProvider = googleAuthProvider;
     }
+ // ===【共用 Session 設定方法】===
+    private void SetUserSession(User user)
+    {
+        HttpContext.Session.SetInt32("UserId", user.Id);
+        HttpContext.Session.SetString("Username", user.Username ?? "");
+        HttpContext.Session.SetString("Phone", user.Phone ?? "");
+        HttpContext.Session.SetInt32("LoginRole", (int)user.LoginRole);
+        HttpContext.Session.SetString("Role", user.LoginRole.ToString());
+        HttpContext.Session.SetString("IsLoggedIn", "true");
+    }
 
-    //google 登入action
+    // ===【統一登入驗證與 Session 設定】===
+    private async Task SignInUser(User user)
+    {
+        var claims = new List<Claim>
+        {
+            new Claim(ClaimTypes.Name, user.Username),
+            new Claim(ClaimTypes.Role, user.LoginRole.ToString()),
+            new Claim("UserId", user.Id.ToString())
+        };
+
+        var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+        var principal = new ClaimsPrincipal(identity);
+
+        await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
+        SetUserSession(user);
+    }
+
+    // --- Google 登入 ---
     public IActionResult GoogleLogin(string? returnUrl = "/")
     {
         var redirectUrl = Url.Action("GoogleResponse", "Account", new { returnUrl });
@@ -30,8 +57,6 @@ public class AccountController : Controller
         return Challenge(properties, GoogleDefaults.AuthenticationScheme);
     }
 
-
-    //呼叫google API
     [Route("signin-google")]
     public async Task<IActionResult> GoogleResponse(string? returnUrl = "/")
     {
@@ -43,42 +68,23 @@ public class AccountController : Controller
                 Console.WriteLine("❌ Google 未授權或找不到使用者");
                 return Unauthorized();
             }
-
             await SignInUser(user);
+
+            if (string.IsNullOrEmpty(user.Phone) || string.IsNullOrEmpty(user.Password))
+            {
+                TempData["Info"] = "請補齊手機與密碼資料以完整會員功能";
+                return RedirectToAction("Edit", "Account");
+            }
             return LocalRedirect(returnUrl ?? "/");
         }
         catch (Exception ex)
         {
             Console.WriteLine($"❌ 錯誤：{ex.Message}");
-            Console.WriteLine(ex.StackTrace);
             return StatusCode(500, "Google 登入時發生錯誤：" + ex.Message);
         }
     }
 
 
-    // 登入認證方法
-    private async Task SignInUser(User user)
-    {
-        var claims = new List<Claim>
-    {
-        new Claim(ClaimTypes.Name, user.Username),
-        new Claim(ClaimTypes.Role, user.LoginRole.ToString()),
-        new Claim("UserId", user.Id.ToString())
-    };
-
-        var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-        var principal = new ClaimsPrincipal(identity);
-
-        await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
-
-        // ✅ 加入 null 判斷
-        HttpContext.Session.SetInt32("UserId", user.Id);
-        HttpContext.Session.SetString("Username", user.Username ?? "");
-        HttpContext.Session.SetString("Phone", user.Phone ?? "");
-        HttpContext.Session.SetInt32("LoginRole", (int)user.LoginRole);
-        HttpContext.Session.SetString("Role", user.LoginRole.ToString());
-        HttpContext.Session.SetString("IsLoggedIn", "true");
-    }
 
     //private async Task SignInUser(User user)
     //{
@@ -111,7 +117,7 @@ public class AccountController : Controller
 
     //}
 
-    // 註冊頁面
+    // --- 註冊 ---
     [HttpGet]
     public IActionResult Register() => View();
 
@@ -122,26 +128,20 @@ public class AccountController : Controller
         if (!ModelState.IsValid)
             return View(user);
 
-        //Email重複驗證
         if (_context.Users.Any(u => u.Email == user.Email))
         {
             ModelState.AddModelError("Email", "Email 已註冊過！");
             return View(user);
         }
-        // 帳號重複驗證
         if (_context.Users.Any(u => u.Username == user.Username))
         {
             ModelState.AddModelError("Username", "此帳號已被使用");
+            return View(user);
         }
 
-
-
         user.LoginRole = UserRole.Customer;
-
-
         try
         {
-
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
         }
@@ -150,13 +150,12 @@ public class AccountController : Controller
             Console.WriteLine("❌ 儲存失敗：" + ex.Message);
             return View(user);
         }
-
         await SignInUser(user);
 
         return RedirectToAction("Index", "Home");
     }
 
-    // 登入畫面
+    // --- 帳密登入 ---
     [HttpGet]
     public IActionResult Login(string? returnUrl)
     {
@@ -168,7 +167,7 @@ public class AccountController : Controller
     public async Task<IActionResult> Login(string users, string email, string password, string? returnUrl)
     {
         var user = _context.Users.FirstOrDefault(u =>
-        (u.Email == email && u.Username == users && u.Password == password));
+            u.Email == email && u.Username == users && u.Password == password);
 
         if (user == null)
         {
@@ -189,7 +188,7 @@ public class AccountController : Controller
         };
     }
 
-    // 登出
+    // --- 登出 ---
     public async Task<IActionResult> Logout()
     {
         HttpContext.Session.Clear();
@@ -197,6 +196,7 @@ public class AccountController : Controller
 
         return RedirectToAction("Index", "Home");
     }
+
     //修改帳號資訊
     [HttpGet]
     public async Task<IActionResult> Edit()
@@ -328,30 +328,6 @@ public class AccountController : Controller
         return View(user);
     }
 
-
-    //直接升級:棄用
-    //[HttpPost]
-    //public async Task<IActionResult> UpgradeToSellerConfirm()
-    //{
-    //    int? userId = HttpContext.Session.GetInt32("UserId");
-    //    if (userId == null)
-    //        return RedirectToAction("Login");
-
-    //    var user = await _context.Users.FindAsync(userId.Value);
-    //    if (user == null)
-    //        return NotFound();
-
-    //    user.LoginRole = UserRole.Seller;
-    //    await _context.SaveChangesAsync();
-
-    //    HttpContext.Session.SetInt32("LoginRole", (int)user.LoginRole);
-
-    //    // 更新 Claims → 重新登入一次
-    //    await SignInUser(user);
-
-    //    TempData["Success"] = "成功開啟賣家功能！";
-    //    return RedirectToAction("Dashboard", "Seller");
-    //}
 
     //申請成為賣家
     [HttpGet]
