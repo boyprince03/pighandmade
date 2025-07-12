@@ -53,7 +53,7 @@ namespace ShoppingPlate.Models
         //補上與 Review 的一對多關聯
         public ICollection<Review> Reviews { get; set; } = new List<Review>();
         //商品總攬
-        public SellerApplication SellerApplication { get; set; }
+        public SellerApplication? SellerApplication { get; set; }
 
 
 
